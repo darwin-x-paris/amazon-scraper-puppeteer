@@ -1,0 +1,83 @@
+{
+    "title": "Input schema for SERP based Amazon scraper",
+    "description": "",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "queries": {
+            "title": "Search Queries",
+            "type": "array",
+            "description": "(Required if you don't use 'Input URL') Here you can provide a list of search queries as a Javascript array. This takes precedence over 'Input URL'.",
+            "editor": "stringList",
+            "prefill": ["iPhone"]
+        },
+        "inputUrl": {
+            "title": "Input URL",
+            "type": "array",
+            "description": "(Required if you don't use 'Search Queries') Here you can provide a list of search URLs.",
+            "editor": "requestListSources"
+        },
+        "countryCode": {
+            "title": "Country",
+            "type": "string",
+            "description": "Country determines the IP address of the proxy used for the query and the Google Shopping domain (e.g. <code>google.es</code> for Spain). <br><br>This setting only applies to <strong>Search queries</strong>, but not to <strong>URLs</strong>.",
+            "default": "us",
+            "editor": "select",
+            "enum": [
+                "au",
+                "de",
+                "br",
+                "ca",
+                "cn",
+                "es",
+                "fr",
+                "us",
+                "in",
+                "it",
+                "jp",
+                "mx",
+                "nl",
+                "pl",
+                "uk",
+                "ae",
+                "sg",
+                "tr"
+            ],
+            "enumTitles": [
+                "au",
+                "de",
+                "br",
+                "ca",
+                "cn",
+                "es",
+                "fr",
+                "us",
+                "in",
+                "it",
+                "jp",
+                "mx",
+                "nl",
+                "pl",
+                "uk",
+                "ae",
+                "sg",
+                "tr"
+            ]
+        },
+        "maxPostCount": {
+            "title": "Max Post Count",
+            "type": "integer",
+            "description": "Limit of the results to be scraped per page (0 means no limit)",
+            "minimum": 0,
+            "default": 0
+        },
+        "extendOutputFunction": {
+            "title": "Extend output function",
+            "type": "string",
+            "editor": "javascript",
+            "description": "A function which result will get merged with the default result. It must return an object.",
+            "prefill": "($) => {\n    const result = {};\n    // Uncomment to modify the title of each item of the output\n    // result.title = 'Test Title';\n\n    return result;\n}",
+            "sectionCaption": "Advanced options"
+        }
+    }
+}
