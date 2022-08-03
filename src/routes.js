@@ -3,7 +3,7 @@ const Apify = require('apify');
 const {
     utils: { log },
 } = Apify;
-const { applyFunction } = require('./utils');
+const { applyFunction, saveScreenshot } = require('./utils');
 
 exports.SEARCH_PAGE = async (page, request, query, requestQueue, maxPostCount, evaledFunc) => {
     // CHECK FOR SELECTOR
@@ -143,13 +143,16 @@ exports.SEARCH_PAGE = async (page, request, query, requestQueue, maxPostCount, e
 
                 data.push(output);
             }
-            
+
             return data;
         },
         maxPostCount,
         query,
         savedItems,
     );
+
+    await saveScreenshot(page)
+
     // ITERATING ITEMS TO EXTEND WITH USERS FUNCTION
     for (let item of data) {
         if (evaledFunc) {
