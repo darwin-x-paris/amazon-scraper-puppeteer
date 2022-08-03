@@ -31,7 +31,7 @@ Apify.main(async () => {
 
     const proxyConfiguration = await Apify.createProxyConfiguration({
         groups: ['GOOGLE_SERP'],
-        countryCode
+        countryCode: countryCode.toUpperCas()
     });
 
     // crawler config
