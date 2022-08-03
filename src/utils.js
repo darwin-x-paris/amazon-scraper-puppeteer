@@ -50,7 +50,7 @@ async function applyFunction(page, extendOutputFunction, item) {
 }
 
 function countryCodeToGoogleHostname(countryCode) {
-    const suffix = countryCode.toUpperCase();
+    const suffix = countryCode.toLowerCase();
     return amazonDomains[suffix];
 }
 
