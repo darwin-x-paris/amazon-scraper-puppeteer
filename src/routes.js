@@ -10,6 +10,11 @@ exports.SEARCH_PAGE = async (page, request, query, requestQueue, maxPostCount, e
     let { savedItems, pageNumber } = request.userData;
     const { hostname } = request.userData;
 
+    console.log("Query :", query)
+
+    await page.$eval('input[name=field-keywords]', el => el.value = query);
+    await page.click('input#nav-search-submit-button');
+
     await page.waitForSelector('div.sh-pr__product-results');
 
     const resultsLength = await page.evaluate(() => {
