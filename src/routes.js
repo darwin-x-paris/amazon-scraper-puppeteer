@@ -38,7 +38,7 @@ exports.SEARCH_PAGE = async (page, request, query, requestQueue, maxPostCount, e
     const data = await page.evaluate(
         (maxPostCount, query, savedItems) => {
             // nodes with items
-            let results = Array.from(document.querySelectorAll('.s-main-slot.s-result-list.s-search-results.sg-row .s-result-item .a-section.a-spacing-base'));
+            let results = Array.from(document.querySelectorAll("div.s-main-slot.s-result-list.s-search-results.sg-row div.a-section.a-spacing-base"));
 
             // limit the results to be scraped, if maxPostCount exists
             if (maxPostCount) {
