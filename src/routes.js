@@ -15,7 +15,8 @@ exports.SEARCH_PAGE = async (page, request, query, requestQueue, maxPostCount, e
     // await page.$eval('input[name=field-keywords]', el => el.value = query);
     // await page.click('input#nav-search-submit-button');
 
-    await page.waitForSelector('div.sh-pr__product-results');
+    await page.waitForSelector('div.s-main-slot.s-result-list.s-search-results.sg-row');
+    // await page.waitForSelector('div.sh-pr__product-results');
 
     const resultsLength = await page.evaluate(() => {
         return document.querySelector('div.sh-pr__product-results').children.length;
