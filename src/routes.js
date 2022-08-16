@@ -12,8 +12,8 @@ exports.SEARCH_PAGE = async (page, request, query, requestQueue, maxPostCount, e
 
     console.log("Query :", query)
 
-    await page.$eval('input[name=field-keywords]', el => el.value = query);
-    await page.click('input#nav-search-submit-button');
+    // await page.$eval('input[name=field-keywords]', el => el.value = query);
+    // await page.click('input#nav-search-submit-button');
 
     await page.waitForSelector('div.sh-pr__product-results');
 
