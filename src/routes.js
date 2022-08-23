@@ -172,7 +172,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
     // ITERATING ITEMS TO EXTEND WITH USERS FUNCTION
     for (let item of data) {
         if (evaledFunc) {
-            item = await applyFunction(countryCode, page, evaledFunc, item);
+            item = await applyFunction(page, evaledFunc, item);
         }
 
         await Apify.pushData(item);
