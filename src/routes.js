@@ -35,7 +35,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
     log.info(`Found ${resultsLength} products on the page.`);
     // eslint-disable-next-line no-shadow
     const data = await page.evaluate(
-        (maxPostCount, query, savedItems) => {
+        (countryCode, maxPostCount, query, savedItems) => {
             // nodes with items
             let results = Array.from(document.querySelectorAll("div.s-main-slot.s-result-list.s-search-results.sg-row div.a-section.a-spacing-base"));
 
@@ -162,7 +162,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
     // ITERATING ITEMS TO EXTEND WITH USERS FUNCTION
     for (let item of data) {
         if (evaledFunc) {
-            item = await applyFunction(page, evaledFunc, item);
+            item = await applyFunction(countryCode, page, evaledFunc, item);
         }
 
         await Apify.pushData(item);
