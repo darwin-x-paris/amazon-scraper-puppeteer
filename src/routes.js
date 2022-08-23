@@ -34,7 +34,13 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
 
     log.info(`Found ${resultsLength} products on the page.`);
 
-    log.inf(document.querySelector("div.s-main-slot.s-result-list.s-search-results.sg-row div.a-section.a-spacing-base h2").textContent)
+    const dataLog = await page.evaluate(
+        (countryCode, maxPostCount, query, savedItems) => {
+            // nodes with items
+            return document.querySelector("div.s-main-slot.s-result-list.s-search-results.sg-row div.a-section.a-spacing-base h2")?.textContent;
+        })
+
+    log.info(`Found ${dataLog} `);
 
     // eslint-disable-next-line no-shadow
     const data = await page.evaluate(
