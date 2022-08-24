@@ -45,6 +45,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
     // eslint-disable-next-line no-shadow
     const data = await page.evaluate(
         (countryCode, maxPostCount, query, savedItems) => {
+
             // nodes with items
             let results = Array.from(document.querySelectorAll("div.s-main-slot.s-result-list.s-search-results.sg-row div.a-section.a-spacing-base"));
 
@@ -85,62 +86,69 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
                 // const idArray = productLink ? productLink.split('?')[0].split('/') : null;
                 // const shoppingId = idArray ? idArray[idArray.length - 1] : null;
 
-                console.log("Item ;", item)
+                console.log("Element product :", item)
 
                 const elemReviews = item.querySelector('.a-section.a-spacing-none.a-spacing-top-micro .a-row.a-size-small')
-                console.log("Item div ;", elemReviews)
+                console.log("Element reviews :", elemReviews)
 
                 let reviewsScore = 0
                 let reviewsCount = 0
 
                 if (elemReviews) {
 
-                    const elemScore = elemReviews.querySelector('.a-link-normal.s-underline-text.s-underline-link-text.s-link-style .a-declarative a')
-                    const elemCount = elemReviews.querySelector('.a-link-normal.s-underline-text.s-underline-link-text.s-link-style span .a-link-normal.s-underline-text.s-underline-link-text.s-link-style')
+                    // ' > div:nth-child(21) > div > div > div > div > div.a-section.a-spacing-small.puis-padding-left-small.puis-padding-right-small > div:nth-child(2) > div > span:nth-child(1) > span > a'
+                    const spanElements = elemReviews.querySelectorAll(':scope > span')
+                    console.log("Span elements :", spanElements)
+
+                    let elemScore = spanElements[0].getAttribute('aria-label').split(' ')[0]
+                    let elemCount = spanElements[1].querySelector('a span').textContent
 
                     console.log("Elem score", elemScore)
                     console.log("Elem count", elemCount)
 
                     if (elemScore && elemCount) {
 
+                        elemScore = elemScore.replace(',', '.')
+
+                        console.log("Avant :", elemCount)
+                        elemCount = elemCount.replace(',', '.').replace(/\s+/g, '')
+                        console.log("Après :", elemCount)
+
                         // There must be reviews ...
-                        // const n1 = parseFloat(numbers[0])
-                        // const n2 = parseFloat(numbers[1])
+                        reviewsScore = parseFloat(elemScore)
+                        reviewsCount = parseInt(elemCount)
 
-                        const n1 = 0
-                        const n2 = 0
+                        // if (n1 > 5 && n2 <= 5) {
 
-                        if (n1 > 5 && n2 <= 5) {
+                        //     reviewsScore = n2
+                        //     reviewsCount = n1
 
-                            reviewsScore = n2
-                            reviewsCount = n1
+                        // } else if (n2 > 5 && n1 <= 5) {
 
-                        } else if (n2 > 5 && n1 <= 5) {
+                        //     reviewsScore = n1
+                        //     reviewsCount = n2
 
-                            reviewsScore = n1
-                            reviewsCount = n2
+                        // } else {
+                        //     // L'un des 2 n'est pas < 5 ... donc doute ...
+                        //     // Seule possibilité : Les 2 sont < 5, puisque la note sur 5 ... ne peut être > 5 ... genious
 
-                        } else {
-                            // L'un des 2 n'est pas < 5 ... donc doute ...
-                            // Seule possibilité : Les 2 sont < 5, puisque la note sur 5 ... ne peut être > 5 ... genious
-
-                            // Le nb reviews est le 
-                            const elemText = elemCount.textContent.replace(/\s+/g, '')
-                            if (elemText.indexOf(n1) > -1) {
-                                reviewsScore = n2
-                                reviewsCount = n1
-                            } else {
-                                reviewsScore = n1
-                                reviewsCount = n2
-                            }
-                        }
+                        //     // Le nb reviews est le 
+                        //     const elemText = elemCount.textContent.replace(/\s+/g, '')
+                        //     if (elemText.indexOf(n1) > -1) {
+                        //         reviewsScore = n2
+                        //         reviewsCount = n1
+                        //     } else {
+                        //         reviewsScore = n1
+                        //         reviewsCount = n2
+                        //     }
+                        // }
                     }
 
                 }
 
                 // FINAL OUTPUT OBJ
                 const output = {
-                    countryCode, 
+                    countryCode,
                     query,
                     type,
                     productName,
@@ -157,6 +165,8 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
                 };
 
                 data.push(output);
+
+                // if (data.length > 5) break
             }
 
             return data;
