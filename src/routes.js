@@ -117,34 +117,63 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
                         // There must be reviews ...
                         reviewsScore = parseFloat(elemScore)
                         reviewsCount = parseInt(elemCount)
+                    }
+                }
 
-                        // if (n1 > 5 && n2 <= 5) {
+                let deadOfTheDay = false
+                let priceReduced = false
+                let bestSeller = false
+                let reductionCoupon = false
+                let bestDeal = false
+                const badgeElement = item.querySelector('span.a-badge')
 
-                        //     reviewsScore = n2
-                        //     reviewsCount = n1
+                if (badgeElement) {
 
-                        // } else if (n2 > 5 && n1 <= 5) {
+                    // span.a-badge :> Y'a un badge rouge ou orange
+                    // span#DEAL_OF_THE_DAY_B019DWX2Y6 : Offre star
+                    const dealOfTheDayElement = item.querySelector('span[id^=DEAL_OF_THE_DAY]')
+                    if (dealOfTheDayElement) {
+                        console.log("Found a deal of the day !")
+                        deadOfTheDay = true
+                    }
+    
+    
+                    // span#DELIGHT_PRICING_B085Q4PZXT : Réduction due au vendeur
+                    const priceReducedElement = item.querySelector('span[id^=DELIGHT_PRICING]')
+                    if (priceReducedElement) {
+                        console.log("Found a delight price !")
+                        priceReduced = true
+                    }
+    
+                    // span#B08FR1QNR1-best-seller : N°1 des ventes dans une catégorie
+                    const bestSellerElement = item.querySelector('span[id$=best-seller]')
+                    if (bestSellerElement) {
+                        console.log("Found a best seller !")
+                        bestSeller = true
+                    }
+                }
 
-                        //     reviewsScore = n1
-                        //     reviewsCount = n2
 
-                        // } else {
-                        //     // L'un des 2 n'est pas < 5 ... donc doute ...
-                        //     // Seule possibilité : Les 2 sont < 5, puisque la note sur 5 ... ne peut être > 5 ... genious
+                const couponElement = item.querySelector('span.s-coupon-unclipped')
+                // span.s-coupon-unclipped /> Y'a un coupon
+                if (couponElement) {
 
-                        //     // Le nb reviews est le 
-                        //     const elemText = elemCount.textContent.replace(/\s+/g, '')
-                        //     if (elemText.indexOf(n1) > -1) {
-                        //         reviewsScore = n2
-                        //         reviewsCount = n1
-                        //     } else {
-                        //         reviewsScore = n1
-                        //         reviewsCount = n2
-                        //     }
-                        // }
+                    // span.s-coupon-unclipped : % de réduction sur la plateforme ? Coupon dispo
+                    
+                    // span#BEST_DEAL_B07M78FB87 : Offre à durée limitée
+                    const bestDealElement = item.querySelector('span[id^=BEST_DEAL]')
+                    if (bestDealElement) {
+                        console.log("Found a best deal !")
+                        bestDeal = true
                     }
 
+                    // Si coupon mais pas best deal ... alors reduc ...
+                    if (!bestDealElement) {
+                        console.log("Found a reduction coupon !")
+                        reductionCoupon = true
+                    }
                 }
+
 
                 // FINAL OUTPUT OBJ
                 const output = {
@@ -160,6 +189,11 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
                     // shoppingId,
                     reviewsScore,
                     reviewsCount,
+                    deadOfTheDay,
+                    priceReduced,
+                    bestSeller,
+                    reductionCoupon,
+                    bestDeal,
                     positionOnSearchPage: i + 1,
                     // productDetails: item.querySelectorAll('.translate-content')[1]?.textContent.trim(),
                 };
