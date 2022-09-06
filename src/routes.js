@@ -217,7 +217,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
                     }
                 }
 
-                letldeadOfTheDay = false
+                let dealOfTheDay = false
                 let priceReduced = false
                 let bestSeller = false
                 let reductionCoupon = false
