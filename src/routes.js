@@ -47,7 +47,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
         (countryCode, maxPostCount, query, savedItems) => {
 
             const data = [];
-            
+
             // Ads :
             let ads = document.querySelectorAll('*[data-avar="deal"]')
             for (let ad of ads) {
@@ -93,7 +93,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
                 let productName = ''
 
                 const nameElement = postAd.querySelector('span.a-truncate-full.a-offscreen')
-                if (adImage) {
+                if (nameElement) {
                     productName = nameElement.textContent
                 }
 
