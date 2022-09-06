@@ -46,6 +46,8 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
     const data = await page.evaluate(
         (countryCode, maxPostCount, query, savedItems) => {
 
+            const data = [];
+            
             // Ads :
             let ads = document.querySelectorAll('*[data-avar="deal"]')
             for (let ad of ads) {
@@ -134,7 +136,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
             }
 
             // eslint-disable-next-line no-shadow
-            const data = [];
+            
             // ITERATING NODES TO GET RESULTS
             for (let i = 0; i < results.length; i++) {
                 // Please pay attention that "merchantMetrics" and "reviewsLink" were removed from the  "SEARCH" page.
