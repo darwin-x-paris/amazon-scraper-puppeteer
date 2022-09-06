@@ -46,8 +46,87 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
     const data = await page.evaluate(
         (countryCode, maxPostCount, query, savedItems) => {
 
+            // Ads :
+            let ads = document.querySelectorAll('*[data-avar="deal"]')
+            for (let ad of ads) {
+
+                let productName = ''
+
+                const adImage = ad.querySelector('img')
+                if (adImage) {
+                    productName = adImage.getAttribute('alt')
+                }
+
+                const output = {
+                    countryCode,
+                    query,
+                    type: 'ad-front',
+                    productName,
+                    // productLink,
+                    // price,
+                    // description,
+                    // merchantName,
+                    // merchantLink,
+                    // shoppingId,
+                    reviewsScore: '',
+                    reviewsCount: '',
+                    dealOfTheDay: '',
+                    priceReduced: '',
+                    bestSeller: '',
+                    reductionCoupon: '',
+                    bestDeal: '',
+                    isPrime: '',
+                    hasVideo: '',
+                    positionOnSearchPage: -1,
+                    // productDetails: item.querySelectorAll('.translate-content')[1]?.textContent.trim(),
+                };
+
+                data.push(output);
+            }
+
+            //////>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            let lstPostAds = document.querySelectorAll("._bXVsd_mbc_PQYo5 ._bXVsd_container_3aZDQ")
+            for (let postAd of lstPostAds) {
+
+                let productName = ''
+
+                const nameElement = postAd.querySelector('span.a-truncate-full.a-offscreen')
+                if (adImage) {
+                    productName = nameElement.textContent
+                }
+
+                const output = {
+                    countryCode,
+                    query,
+                    type: 'adsLinkSearch',
+                    productName,
+                    // productLink,
+                    // price,
+                    // description,
+                    // merchantName,
+                    // merchantLink,
+                    // shoppingId,
+                    reviewsScore: '',
+                    reviewsCount: '',
+                    dealOfTheDay: '',
+                    priceReduced: '',
+                    bestSeller: '',
+                    reductionCoupon: '',
+                    bestDeal: '',
+                    isPrime: '',
+                    hasVideo: '',
+                    positionOnSearchPage: -1,
+                    // productDetails: item.querySelectorAll('.translate-content')[1]?.textContent.trim(),
+                };
+
+                data.push(output);
+            }
+
+            //////>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
             // nodes with items
-            let results = Array.from(document.querySelectorAll("div.s-main-slot.s-result-list.s-search-results.sg-row div.a-section.a-spacing-base"));
+            let results = Array.from(document.querySelectorAll(".s-card-container.s-overflow-hidden.aok-relative.s-card-border"));
+            // let results = Array.from(document.querySelectorAll("div.s-main-slot.s-result-list.s-search-results.sg-row div.a-section.a-spacing-base"));
 
             // limit the results to be scraped, if maxPostCount exists
             if (maxPostCount) {
@@ -64,7 +143,25 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
 
                 // console.log("Product", i)
 
-                const type = 'result'
+
+                let type = 'result'
+                const sponsoredElement = item.querySelector('span.s-sponsored-label-info-icon')
+                if (sponsoredElement)
+                    type = 'ad'
+
+                const adElement = item.querySelector('.sbv-ad-feedback')
+                if (adElement)
+                    type = 'bigad'
+
+                let hasVideo = false
+                const videoElement = item.querySelector('.sbv-video-overlay')
+                if (videoElement)
+                    hasVideo = true
+
+                let isPrime = false
+                const primeElement = item.querySelector('.a-icon-prime')
+                if (primeElement)
+                    isPrime = true
 
                 const title = item.querySelector('h2') ? item.querySelector('h2') : null;
 
@@ -88,7 +185,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
 
                 console.log("Element product :", item)
 
-                const elemReviews = item.querySelector('.a-section.a-spacing-none.a-spacing-top-micro .a-row.a-size-small')
+                const elemReviews = item.querySelector('.s-card-container.s-overflow-hidden.aok-relative.s-card-border')
                 console.log("Element reviews :", elemReviews)
 
                 let reviewsScore = 0
@@ -120,7 +217,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
                     }
                 }
 
-                let deadOfTheDay = false
+                letldeadOfTheDay = false
                 let priceReduced = false
                 let bestSeller = false
                 let reductionCoupon = false
@@ -131,20 +228,26 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
 
                     // span.a-badge :> Y'a un badge rouge ou orange
                     // span#DEAL_OF_THE_DAY_B019DWX2Y6 : Offre star
-                    const dealOfTheDayElement = item.querySelector('span[id^=DEAL_OF_THE_DAY]')
+                    let dealOfTheDayElement = item.querySelector('span[id^=DEAL_OF_THE_DAY]')
                     if (dealOfTheDayElement) {
                         console.log("Found a deal of the day !")
-                        deadOfTheDay = true
+                        dealOfTheDay = true
                     }
-    
-    
+                    dealOfTheDayElement = item.querySelector('div[data-deal^=DEAL_OF_THE_DAY]')
+                    if (dealOfTheDayElement) {
+                        console.log("Found a deal of the day !")
+                        dealOfTheDay = true
+                    }
+
+
+
                     // span#DELIGHT_PRICING_B085Q4PZXT : Réduction due au vendeur
                     const priceReducedElement = item.querySelector('span[id^=DELIGHT_PRICING]')
                     if (priceReducedElement) {
                         console.log("Found a delight price !")
                         priceReduced = true
                     }
-    
+
                     // span#B08FR1QNR1-best-seller : N°1 des ventes dans une catégorie
                     const bestSellerElement = item.querySelector('span[id$=best-seller]')
                     if (bestSellerElement) {
@@ -159,7 +262,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
                 if (couponElement) {
 
                     // span.s-coupon-unclipped : % de réduction sur la plateforme ? Coupon dispo
-                    
+
                     // span#BEST_DEAL_B07M78FB87 : Offre à durée limitée
                     const bestDealElement = item.querySelector('span[id^=BEST_DEAL]')
                     if (bestDealElement) {
@@ -189,11 +292,13 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
                     // shoppingId,
                     reviewsScore,
                     reviewsCount,
-                    deadOfTheDay,
+                    dealOfTheDay,
                     priceReduced,
                     bestSeller,
                     reductionCoupon,
                     bestDeal,
+                    isPrime,
+                    hasVideo,
                     positionOnSearchPage: i + 1,
                     // productDetails: item.querySelectorAll('.translate-content')[1]?.textContent.trim(),
                 };
