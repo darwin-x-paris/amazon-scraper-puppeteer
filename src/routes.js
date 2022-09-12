@@ -136,7 +136,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
             }
 
             // eslint-disable-next-line no-shadow
-            
+
             // ITERATING NODES TO GET RESULTS
             for (let i = 0; i < results.length; i++) {
                 // Please pay attention that "merchantMetrics" and "reviewsLink" were removed from the  "SEARCH" page.
@@ -187,8 +187,12 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
 
                 console.log("Element product :", item)
 
-                const elemReviews = item.querySelector('.s-card-container.s-overflow-hidden.aok-relative.s-card-border')
+
+                let elemReviews = item.querySelector('div.a-section.a-spacing-small.puis-padding-left-small.puis-padding-right-small > div > div')
                 console.log("Element reviews :", elemReviews)
+
+                if (!elemReviews)
+                    elemReviews = item.querySelector('div.a-section.a-spacing-small.puis-padding-left-small.puis-padding-right-small > div.a-section.a-spacing-none.a-spacing-top-micro')
 
                 let reviewsScore = 0
                 let reviewsCount = 0
@@ -210,7 +214,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
                         elemScore = elemScore.replace(',', '.')
 
                         console.log("Avant :", elemCount)
-                        elemCount = elemCount.replace(',', '.').replace(/\s+/g, '')
+                        elemCount = elemCount.replace(',', '').replace('.', '').replace(/\s+/g, '')
                         console.log("Après :", elemCount)
 
                         // There must be reviews ...
