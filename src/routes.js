@@ -48,6 +48,43 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
 
             const data = [];
 
+            // Ads ?
+            let bigad = document.querySelectorAll('.s-result-item.s-widget.AdHolder.s-flex-full-width')
+            for (let ad of ads) {
+
+                let productName = ''
+
+                const elemName = ad.querySelector('span.a-truncate-cut')
+                if (elemName)
+                    productName = elemName.textContent
+
+                const output = {
+                    countryCode,
+                    query,
+                    type: 'ad-front-top',
+                    productName,
+                    // productLink,
+                    // price,
+                    // description,
+                    // merchantName,
+                    // merchantLink,
+                    // shoppingId,
+                    reviewsScore: '',
+                    reviewsCount: '',
+                    dealOfTheDay: '',
+                    priceReduced: '',
+                    bestSeller: '',
+                    reductionCoupon: '',
+                    bestDeal: '',
+                    isPrime: '',
+                    hasVideo: '',
+                    positionOnSearchPage: -1,
+                    // productDetails: item.querySelectorAll('.translate-content')[1]?.textContent.trim(),
+                };
+
+                data.push(output);
+            }
+
             // Ads :
             let ads = document.querySelectorAll('*[data-avar="deal"]')
             for (let ad of ads) {
