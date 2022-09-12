@@ -50,7 +50,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
 
             // Ads ?
             let bigad = document.querySelectorAll('.s-result-item.s-widget.AdHolder.s-flex-full-width')
-            for (let ad of ads) {
+            for (let ad of bigad) {
 
                 let productName = ''
 
