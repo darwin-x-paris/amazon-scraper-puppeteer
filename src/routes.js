@@ -47,6 +47,9 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
         (countryCode, maxPostCount, query, savedItems) => {
 
             const data = [];
+            
+            if (document.querySelector('#sp-cc-accept'))
+                document.querySelector('#sp-cc-accept').click()
 
             // Ads ?
             let bigad = document.querySelectorAll('.s-result-item.s-widget.AdHolder.s-flex-full-width')
