@@ -227,8 +227,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
 
                 let elemReviews
                 let arrElemReviews = item.querySelectorAll('div.a-section.a-spacing-small.puis-padding-left-small.puis-padding-right-small > div > div')
-                console.log("Element reviews :", elemReviews)
-
+                
                 // Check this is a review element :
                 for (let e of arrElemReviews) {
                     if (e.querySelectorAll(':scope > span').length === 2) {
@@ -236,7 +235,8 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
                         break
                     }
                 }
-
+                
+                console.log("Element reviews :", elemReviews)
 
                 if (!arrElemReviews)
                     arrElemReviews = item.querySelectorAll('div.a-section.a-spacing-small.puis-padding-left-small.puis-padding-right-small > div.a-section.a-spacing-none.a-spacing-top-micro')
@@ -248,6 +248,7 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
                     }
                 }
 
+                console.log("Element reviews (2) :", elemReviews)
 
                 let reviewsScore = 0
                 let reviewsCount = 0
@@ -260,23 +261,28 @@ exports.SEARCH_PAGE = async (countryCode, page, request, query, requestQueue, ma
 
                     if (spanElements.length >= 2) {
 
-                        let elemScore = spanElements[0].getAttribute('aria-label').split(' ')[0]
-                        let elemCount = spanElements[1].querySelector('a span').textContent
+                        if (spanElements[0].getAttribute('aria-label')) {
 
-                        console.log("Elem score", elemScore)
-                        console.log("Elem count", elemCount)
-
-                        if (elemScore && elemCount) {
-
-                            elemScore = elemScore.replace(',', '.')
-
-                            console.log("Avant :", elemCount)
-                            elemCount = elemCount.replace(',', '').replace('.', '').replace(/\s+/g, '')
-                            console.log("Après :", elemCount)
-
-                            // There must be reviews ...
-                            reviewsScore = parseFloat(elemScore)
-                            reviewsCount = parseInt(elemCount)
+                            let elemScore = spanElements[0].getAttribute('aria-label').split(' ')[0]
+                            let elemCount = spanElements[1].querySelector('a span').textContent
+            
+                            console.log("Elem score", elemScore)
+                            console.log("Elem count", elemCount)
+            
+                            if (elemScore && elemCount) {
+            
+                                elemScore = elemScore.replace(',', '.')
+            
+                                console.log("Avant :", elemCount)
+                                elemCount = elemCount.replace(',', '').replace('.', '').replace(/\s+/g, '')
+                                console.log("Après :", elemCount)
+            
+                                // There must be reviews ...
+                                reviewsScore = parseFloat(elemScore)
+                                reviewsCount = parseInt(elemCount)
+                            }
+                        } else {
+                            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> No attr for reviewScore :", spanElements)
                         }
                     }
                 }
