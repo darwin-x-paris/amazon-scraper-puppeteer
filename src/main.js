@@ -36,13 +36,6 @@ Apify.main(async () => {
 
     // crawler config
     const crawler = new Apify.PuppeteerCrawler({
-        launchContext: {
-            launchOptions: {
-                // headless: true,
-                // Other Puppeteer options
-                product: 'firefox',
-            },
-        },
         requestList,
         requestQueue,
         useSessionPool: true,
