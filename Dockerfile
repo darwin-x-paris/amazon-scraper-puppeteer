@@ -32,3 +32,5 @@ COPY . ./
 # In short, the instruction looks something like this:
 #
 # CMD npm start
+
+RUN PUPPETEER_PRODUCT=firefox npm install
