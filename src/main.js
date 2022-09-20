@@ -37,7 +37,10 @@ Apify.main(async () => {
     // crawler config
     const crawler = new Apify.PuppeteerCrawler({
         launchContext: {
-            args: ['--incognito'],
+            useChrome: true,
+            launchOptions: {
+                args: ['--incognito'],
+            }
         },
         requestList,
         requestQueue,
